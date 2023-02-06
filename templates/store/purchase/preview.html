@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>購入内容</h1>
+    <table>
+        <tr>
+            <td>商品</td>
+            <td>数量</td>
+        </tr>
+        {% for cartunit in user.cart.units.all %}
+            <tr>
+                <td>{{ cartunit.book }}</td>
+                <td>{{ cartunit.quantity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h1>請求額</h1>
+    {{ total_price }}円
+
+    <h1>配送先</h1>
+    <p>{{ user.address }}</p>
+
+    <form action="{% url 'store:_purchase_process' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="uname" value="{{ user.username }}">
+        <input type="submit" value="購入確定">
+    </form>
+{% endblock %}

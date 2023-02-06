@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="style.css"/>
+    <title>ログイン</title>
+</head>
+
+<body>
+<a href="{% url 'store:home' %}">Home</a>
+
+<h1>Login</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Login">
+</form>
+
+{% if 'purchase' in request.GET.next_page %}
+    <a href="{% url 'account:signup' %}?next_page=purchase">新規登録はこちら</a>
+{% else %}
+    <a href="{% url 'account:signup' %}">新規登録はこちら</a>
+{% endif %}
+</body>
+</html>
+
+

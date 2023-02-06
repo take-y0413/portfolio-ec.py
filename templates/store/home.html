@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>書籍リスト</h2>
+<form method="get" id="BookSearchForm">
+    {{ form }}
+    <input type="submit" value="search" formaction="{% url 'store:home' %}">
+</form>
+
+{% if book_list %}
+<ul>
+    {% for book in book_list %}
+    <li><a href="{% url 'book:detail' book.pk %}">{{ book.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{{ query_string }}&page={{ page_obj.previous_page_number }}">前のページへ</a>
+        {% endif %}
+
+        {% for link_page in page_obj.paginator.page_range %}
+        {% if link_page == page_obj.number %}
+            <span class="page-link" href="#">{{ link_page }}</span>
+        {% else %}
+           <span class="page-link" href="#"><a
+                   href="?{{ query_string }}&page={{ link_page }}">{{ link_page }}</a></span>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?{{ query_string }}&page={{ page_obj.next_page_number }}">次のページへ</a>
+        {% endif %}
+    </span>
+</div>
+{% else %}
+<p>検索に該当する書籍は存在しませんでした</p>
+{% endif %}
+
+{% endblock %}

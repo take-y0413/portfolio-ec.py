@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>書籍名</th>
+        <td>{{ book.title }}</td>
+    </tr>
+    <tr>
+        <th>カテゴリー</th>
+        <td>{{ book.fk_category }}</td>
+    </tr>
+    <tr>
+        <th>価格</th>
+        <td>{{ book.price }}</td>
+    </tr>
+    <tr>
+        <th>説明</th>
+        <td>{{ book.description }}</td>
+    </tr>
+</table>
+<hr>
+{% if user.is_authenticated %}
+<form action="{% url 'store:add_modelcart' %}" method="POST">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+        {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    {% csrf_token %}
+    <input type="hidden" name="book_pk" value="{{ book.pk }}">
+    <button type="submit" class="btn btn-primary">カートに追加</button>
+</form>
+{% else %}
+<form action="{% url 'store:add_sessioncart' %}" method="POST">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+        {{ field }}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    {% csrf_token %}
+    <input type="hidden" name="book_pk" value="{{ book.pk }}">
+    <button type="submit" class="btn btn-primary">カートに追加</button>
+</form>
+　　{% endif %}
+{% endblock %}

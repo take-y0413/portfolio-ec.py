@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2>ショッピングカート</h2>
+{% if cart.units.all %}
+<table>
+    <tr>
+        <th>title</th>
+        <td>quantity</td>
+    </tr>
+    {% for unit in cart.units.all %}
+    <tr>
+        <th>{{ unit.book }}</th>
+        <td>{{ unit.quantity }}</td>
+        <td>
+            <form method="post" action="{% url 'store:modelcart_delete' %}">{% csrf_token %}
+                <input type="hidden" name="unit_pk" value="{{ unit.pk }}">
+                <input type="hidden" name="uname" value="{{ user.username }}">
+                <input type="submit" value="削除">
+            </form>
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+<form action="{% url 'store:purchase_preview' %}" method="get">
+    <input type="hidden" name="uname" value="{{ user.username }}">
+    <input type="submit" value="購入へ">
+</form>
+{% else %}
+カートは空です。
+{% endif %}
+{% else %}
+{% if lis_cart %}
+<table>
+    <tr>
+        <th>{{ unit.book }}</th>
+        <td>{{ unit.quantity }}</td>
+    </tr>
+    {% for unit in lis_cart %}
+    <tr>
+        <th>{{ unit.book }}</th>
+        <td>{{ unit.quantity }}</td>
+        <td>
+            <form method="post" action="{% url 'store:sessioncart_delete' %}">{% csrf_token %}
+                <input type="hidden" name="book_pk" value="{{ unit.book_pk }}">
+                <input type="submit" value="削除">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<form action="{% url 'account:login' %}" method="get">
+    <input type="hidden" name="next_page" value="purchase">
+    <input type="submit" value="購入へ">
+</form>
+{% else %}
+カートは空です。
+{% endif %}
+{% endif %}
+
+{% endblock %}
